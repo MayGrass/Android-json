@@ -2,6 +2,7 @@ package tw.org.iii.android_json;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,11 +31,16 @@ public class MainActivity extends AppCompatActivity {
     private MyAdapter myAdapter;
     private RequestQueue queue;
     private LinkedList<HashMap<String,String>> data;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setMessage("Downloading.....");
 
         data = new LinkedList<>();
         queue = Volley.newRequestQueue(this);
@@ -44,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void fetchRemoteData() {
+        progressDialog.show();
+
         StringRequest request = new StringRequest(Request.Method.GET,
                 "http://data.coa.gov.tw/Service/OpenData/ODwsv/ODwsvTravelFood.aspx",
                 new Response.Listener<String>() {
@@ -57,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.v("DCH", error.toString());
+                        progressDialog.dismiss();
                     }
                 });
         queue.add(request);
@@ -82,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e) {
             Log.v("DCH", e.toString());
         }
+        progressDialog.dismiss();
     }
 
     private void initListView() {
