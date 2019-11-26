@@ -14,8 +14,8 @@ import java.util.HashMap;
 
 public class DetailActivity extends AppCompatActivity {
     private String id, name, addr, tel, hostwords, feature, latIng, picurl, heart;
-    private ImageView imageView;
-    private TextView textView;
+    private ImageView img;
+    private TextView content;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +35,9 @@ public class DetailActivity extends AppCompatActivity {
         latIng = row.get("Coordinate");
         picurl = row.get("PicURL");
 
-        imageView = findViewById(R.id.detail_img);
-        textView = findViewById(R.id.detail_Content);
+        img = findViewById(R.id.detail_img);
+        content = findViewById(R.id.detail_Content);
     }
+
+
 }

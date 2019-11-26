@@ -31,7 +31,7 @@ import java.util.LinkedList;
 public class MainActivity extends AppCompatActivity {
     private ListView listView;
     private MyAdapter myAdapter;
-    private RequestQueue queue;
+    //private RequestQueue queue;
     private LinkedList<HashMap<String,String>> data;
     private ProgressDialog progressDialog;
 
@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         progressDialog.setMessage("Downloading.....");
 
         data = new LinkedList<>();
-        queue = Volley.newRequestQueue(this);
+        //queue = Volley.newRequestQueue(this);
         listView = findViewById(R.id.listView);
         initListView();
         fetchRemoteData();
@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
                         progressDialog.dismiss();
                     }
                 });
-        queue.add(request);
+        MainApp.queue.add(request);
     }
 
     private void parseJSON(String json) {
