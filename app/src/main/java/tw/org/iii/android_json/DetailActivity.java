@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -59,4 +60,16 @@ public class DetailActivity extends AppCompatActivity {
         MainApp.queue.add(request);
     }
 
+    public void gotomap(View view) {
+
+        String[] temp = latIng.split(",");
+        double lat = Double.valueOf(temp[0]);
+        double lng = Double.valueOf(temp[1]);
+
+        Log.v("DCH", lat + "x" + lng);
+        Intent intent = new Intent(this, MapsActivity.class);
+        intent.putExtra("lat", lat);
+        intent.putExtra("lng", lng);
+        startActivity(intent);
+    }
 }
