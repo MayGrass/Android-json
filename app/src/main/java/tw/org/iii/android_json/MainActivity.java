@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
                 dd.put("HostWords", row.getString("HostWords"));
                 dd.put("FoodFeature", row.getString("FoodFeature"));
                 dd.put("Coordinate", row.getString("Coordinate"));
-                dd.put("PucURL", row.getString("PicURL"));
+                dd.put("PicURL", row.getString("PicURL"));
                 dd.put("Heart", "xx");
                 data.add(dd);
             }
