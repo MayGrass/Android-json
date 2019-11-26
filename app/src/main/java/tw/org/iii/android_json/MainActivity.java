@@ -85,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
                 dd.put("FoodFeature", row.getString("FoodFeature"));
                 dd.put("Coordinate", row.getString("Coordinate"));
                 dd.put("PucURL", row.getString("PicURL"));
+                dd.put("Heart", "xx");
                 data.add(dd);
             }
             myAdapter.notifyDataSetChanged();
@@ -117,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
             LayoutInflater inflater = LayoutInflater.from(MainActivity.this); //inflater 浮動視窗
             View view = inflater.inflate(R.layout.item, null);
 
@@ -131,7 +132,15 @@ public class MainActivity extends AppCompatActivity {
             address.setText(data.get(position).get("Address"));
 
             ImageView heart = view.findViewById(R.id.item_heart);
-            heart.setImageResource(position%4==0?R.drawable.heart:R.drawable.heart_no);
+            heart.setImageResource(data.get(position).get("Heart").equals("ok")?R.drawable.heart:R.drawable.heart_no);
+            heart.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.v("DCH", "post" + position);
+                    data.get(position).put("Heart", data.get(position).get("Heart").equals("ok")?"xx":"ok");
+                    ((ImageView)v).setImageResource(data.get(position).get("Heart").equals("ok")?R.drawable.heart:R.drawable.heart_no);
+                }
+            });
 
             return view;
         }
