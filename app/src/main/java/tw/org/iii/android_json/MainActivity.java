@@ -3,10 +3,14 @@ package tw.org.iii.android_json;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -15,16 +19,24 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.LinkedList;
+
 public class MainActivity extends AppCompatActivity {
     private ListView listView;
     private MyAdapter myAdapter;
     private RequestQueue queue;
+    private LinkedList<HashMap<String,String>> data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        data = new LinkedList<>();
         queue = Volley.newRequestQueue(this);
         listView = findViewById(R.id.listView);
         initListView();
@@ -37,16 +49,39 @@ public class MainActivity extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-
+                        Log.v("DCH", response);
+                        parseJSON(response);
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-
+                        Log.v("DCH", error.toString());
                     }
                 });
         queue.add(request);
+    }
+
+    private void parseJSON(String json) {
+        try {
+            JSONArray root = new JSONArray(json);
+            for (int i=0; i<root.length(); i++) {
+                HashMap<String, String> dd = new HashMap<>();
+                JSONObject row = root.getJSONObject(i);
+                dd.put("ID", row.getString("ID"));
+                dd.put("Name", row.getString("Name"));
+                dd.put("Address", row.getString("Address"));
+                dd.put("Tel", row.getString("Tel"));
+                dd.put("HostWords", row.getString("HostWords"));
+                dd.put("FoodFeature", row.getString("FoodFeature"));
+                dd.put("Coordinate", row.getString("Coordinate"));
+                dd.put("PucURL", row.getString("PicURL"));
+                data.add(dd);
+            }
+            myAdapter.notifyDataSetChanged();
+        } catch (Exception e) {
+            Log.v("DCH", e.toString());
+        }
     }
 
     private void initListView() {
@@ -58,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return 0;
+            return data.size();
         }
 
         @Override
@@ -73,7 +108,22 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            return null;
+            LayoutInflater inflater = LayoutInflater.from(MainActivity.this); //inflater 浮動視窗
+            View view = inflater.inflate(R.layout.item, null);
+
+            TextView name = view.findViewById(R.id.item_name);
+            name.setText(data.get(position).get("Name"));
+
+            TextView tel = view.findViewById(R.id.item_tel);
+            tel.setText(data.get(position).get("Tel"));
+
+            TextView address = view.findViewById(R.id.item_address);
+            address.setText(data.get(position).get("Address"));
+
+            ImageView heart = view.findViewById(R.id.item_heart);
+            heart.setImageResource(position%4==0?R.drawable.heart:R.drawable.heart_no);
+
+            return view;
         }
     }
 }
